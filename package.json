@@ -1,0 +1,30 @@
+{
+  "name": "castellated",
+  "version": "0.1.0",
+  "description": "Generic password authentication library",
+  "main": "index.ts",
+  "scripts": {
+    "test": "tap --ts test/**/*.ts",
+    "prepack": "rm -rf dist && tsc && npx typedoc --out dist/doc src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frezik/castellated.git"
+  },
+  "keywords": [
+    "password",
+    "authentication",
+    "security"
+  ],
+  "author": "Timm Murray <tmurray@wumpus-cave.net>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/frezik/castellated/issues"
+  },
+  "homepage": "https://github.com/frezik/castellated#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^13.5.0",
+    "tap": "^14.10.6"
+  }
+}
