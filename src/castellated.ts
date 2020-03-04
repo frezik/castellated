@@ -28,7 +28,7 @@ type fetchPasswdCallbackType = (
 type updatePasswdCallbackType = (
     username: string
     ,passwd: string
-) => Promise<string>;
+) => Promise<void>;
 
 
 export class Castellated
@@ -68,7 +68,8 @@ export class Castellated
                     else {
                         resolve( false );
                     }
-                });
+                }
+            );
         });
     }
 
