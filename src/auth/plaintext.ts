@@ -3,18 +3,18 @@ import * as Castellated from '../castellated';
 
 export class PlaintextAuth
 {
-    private expected_password: String;
+    private expected_password: string;
 
 
     constructor(
-        expected_password: String
+        expected_password: string
     )
     {
         this.expected_password = expected_password;
     }
 
     isMatch(
-        auth_data: String
+        auth_data: string
     ): boolean
     {
         return Castellated.isMatch(
