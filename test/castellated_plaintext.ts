@@ -2,8 +2,9 @@ import * as Castle from '../index';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
-const GOOD_PASSWD = "secretpass";
-const BAD_PASSWD = "badpass";
+const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
+const GOOD_PASSWD_UNENCODED = "secretpass";
+const BAD_PASSWD = "ca571e-v1-plain-plain-badpass";
 
 Tap.plan( 2 );
 
@@ -26,14 +27,14 @@ const update_callback = (
 
 const castle = new Castle.Castellated(
     "plaintext"
-    ,""
+    ,"plain"
     ,fetch_callback
     ,update_callback
 );
 
 Tap.test( "Good passwd", (Tap) => {
     castle
-        .match( USERNAME, GOOD_PASSWD )
+        .match( USERNAME, GOOD_PASSWD_UNENCODED )
         .then( (is_matched) => {
             Tap.ok( is_matched, "Password matched" );
             Tap.end();

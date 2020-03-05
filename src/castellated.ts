@@ -1,3 +1,37 @@
+import * as AuthPlaintext from './auth/plaintext';
+
+
+const CASTLE_STR_PREFIX = "ca571e";
+const CASTLE_STR_VERSION = 1;
+const CASTLE_STR_SEP = "-";
+const CASTLE_STR_REGEX = new RegExp([
+    "^", "(", CASTLE_STR_PREFIX, ")"
+    ,CASTLE_STR_SEP, "v(", CASTLE_STR_VERSION, ")"
+    ,CASTLE_STR_SEP, "([^\\", CASTLE_STR_SEP, "]+)" // Crypt type
+    ,CASTLE_STR_SEP, "([^\\", CASTLE_STR_SEP, "]+)" // Crypt args
+    ,CASTLE_STR_SEP, "(.*)" // Password data
+    ,"$"
+].join( "" ));
+
+
+export type AuthCallback = (
+    args_str: string
+) => Authenticator;
+
+let AUTH_BY_TYPE: object = {};
+
+export function registerAuthenticator(
+    name: string
+    ,auth_callback: AuthCallback
+): void
+{
+    AUTH_BY_TYPE[name] = auth_callback;
+}
+
+registerAuthenticator( AuthPlaintext.AUTH_NAME,
+    AuthPlaintext.register() );
+
+
 export function isMatch(
     str1: string
     ,str2: string
@@ -31,6 +65,59 @@ type updatePasswdCallbackType = (
 ) => Promise<void>;
 
 
+export class PasswordString
+{
+    orig_str: string;
+    prefix; string;
+    version: string;
+    crypt_type: string;
+    crypt_args: string;
+    passwd_data: string;
+    auth: Authenticator;
+
+    constructor(
+        str: string
+    ) {
+        this.orig_str = str;
+
+        const matches = this.orig_str.match( CASTLE_STR_REGEX );
+        if( matches ) {
+            this.prefix = matches[1];
+            this.version = matches[2];
+            this.crypt_type = matches[3];
+            this.crypt_args = matches[4];
+            this.passwd_data = matches[5];
+
+            this.auth = this.getAuthByString(
+                this.crypt_type
+                ,this.crypt_args
+            );
+        }
+    }
+
+
+    toString(): string
+    {
+        return this.orig_str;
+    }
+
+
+    private getAuthByString(
+        crypt_type: string
+        ,crypt_args: string
+    ): Authenticator
+    {
+        if( AUTH_BY_TYPE[crypt_type] ) {
+            let auth_callback = AUTH_BY_TYPE[crypt_type];
+            let auth = auth_callback( crypt_args);
+            return auth;
+        }
+        else {
+            throw `Could not find authenticator for crypt type "${crypt_type}"`;
+        }
+    }
+}
+
 export class Castellated
 {
     private auth_preferred_type: string;
@@ -59,9 +146,12 @@ export class Castellated
         return new Promise<boolean>( (resolve, reject) => {
             this.fetch_passwd_callback( username ).then(
                 (correct_passwd) => {
-                    // TODO encode passwd
+                    const parsed_passwd = new PasswordString(
+                        correct_passwd
+                    );
+                    const auth = parsed_passwd.auth;
 
-                    if( isMatch( correct_passwd, passwd ) ) {
+                    if( auth.isMatch( passwd, parsed_passwd ) ) {
                         // TODO if not on preferred type, change it
                         resolve( true );
                     }
@@ -86,6 +176,7 @@ export class Castellated
 export interface Authenticator
 {
     isMatch(
-        auth_data: string
+        incoming_passwd: string
+        ,stored_passwd: PasswordString
     ): boolean;
 }

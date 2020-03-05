@@ -1,25 +1,29 @@
 import * as Castellated from '../castellated';
 
+export const AUTH_NAME = "plain";
+
 
 export class PlaintextAuth
 {
-    private expected_password: string;
-
-
-    constructor(
-        expected_password: string
-    )
-    {
-        this.expected_password = expected_password;
-    }
-
     isMatch(
-        auth_data: string
+        incoming_passwd: string
+        ,stored_passwd: Castellated.PasswordString
     ): boolean
     {
         return Castellated.isMatch(
-            this.expected_password
-            ,auth_data
+            incoming_passwd
+            ,stored_passwd.passwd_data
         );
     }
+}
+
+
+export function register(): Castellated.AuthCallback
+{
+    const builder = (
+        args_str: string
+    ): Castellated.Authenticator => {
+        return new PlaintextAuth();
+    };
+    return builder;
 }
