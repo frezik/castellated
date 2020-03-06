@@ -13,6 +13,28 @@ class MockAuth
             resolve( true );
         });
     }
+
+    sameAuth(
+        passwd: Castle.PasswordString
+    ): boolean
+    {
+        return true;
+    }
+
+    encode(
+        passwd: string
+    ): Promise<Castle.PasswordString>
+    {
+        return new Promise( (resolve, reject) => {
+            resolve( new Castle.PasswordString([
+                Castle.CASTLE_STR_PREFIX
+                ,"v" + Castle.CASTLE_STR_VERSION
+                ,"mock"
+                ,"mock"
+                ,passwd
+            ].join( Castle.CASTLE_STR_SEP )));
+        });
+    }
 }
 Castle.registerAuthenticator(
     "mock"

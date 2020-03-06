@@ -12,7 +12,7 @@ const stored_passwd = new Castle.PasswordString( [
     // bcrypt string of "foobar"
     ,"$2b$10$wOWIkiks.tbbftwkJ81BNeuOtq631SzbsVOO7VAHf5ziH.edAAqJi"
 ].join("-") );
-const crypt = new Auth.BcryptAuth();
+const crypt = new Auth.BcryptAuth( "10" );
 
 Tap.comment( `Stored password: ${stored_passwd}` );
 Tap.comment( `Stored password parsed: ${stored_passwd.passwd_data}` );

@@ -4,15 +4,16 @@ import * as Tap from 'tap';
 const USERNAME = "foo";
 const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
 const GOOD_PASSWD_UNENCODED = "secretpass";
-const BAD_PASSWD = "ca571e-v1-plain-plain-badpass";
+const BAD_PASSWD = "bar";
 
 Tap.plan( 2 );
 
+let encoded_passwd = GOOD_PASSWD;
 const fetch_callback = (
     username: string
 ): Promise<string> => {
     return new Promise<string>( (resolve, reject) => {
-        resolve( GOOD_PASSWD );
+        resolve( encoded_passwd );
     });
 };
 const update_callback = (
@@ -20,31 +21,24 @@ const update_callback = (
     ,passwd: string
 ): Promise<void> => {
     return new Promise<void>( (resolve, reject) => {
+        encoded_passwd = passwd;
         resolve();
     });
 };
 
 
 const castle = new Castle.Castellated(
-    "plain"
-    ,"plain"
+    "bcrypt"
+    ,"10"
     ,fetch_callback
     ,update_callback
 );
-
-Tap.test( "Good passwd", (Tap) => {
-    castle
-        .match( USERNAME, GOOD_PASSWD_UNENCODED )
-        .then( (is_matched) => {
-            Tap.ok( is_matched, "Password matched" );
-            Tap.end();
-        });
-})
-.then( (Tap) => {
-    castle
-        .match( USERNAME, BAD_PASSWD )
-        .then( (is_matched) => {
-            Tap.ok(! is_matched, "Password did not match" );
-            Tap.end();
-        });
-});
+castle
+    .match( USERNAME, BAD_PASSWD )
+    .then( (is_matched) => {
+        Tap.ok(! is_matched, "Password matched" );
+    })
+    .then( () => {
+        Tap.ok( encoded_passwd.match( /^ca571e-v1-plain/ )
+            ,"Password did not change encoding" );
+    });

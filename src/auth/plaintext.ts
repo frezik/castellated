@@ -18,6 +18,30 @@ export class PlaintextAuth
             resolve( result );
         });
     }
+
+    sameAuth(
+        passwd: Castellated.PasswordString
+    ): boolean
+    {
+        return (AUTH_NAME == passwd.crypt_type);
+    }
+
+    encode(
+        passwd: string
+    ): Promise<Castellated.PasswordString>
+    {
+        const new_passwd = new Castellated.PasswordString([
+            Castellated.CASTLE_STR_PREFIX
+            ,"v" + Castellated.CASTLE_STR_VERSION
+            ,AUTH_NAME
+            ,AUTH_NAME
+            ,passwd
+        ].join( Castellated.CASTLE_STR_SEP ));
+
+        return new Promise( (resolve, reject) => {
+            resolve( new_passwd );
+        });
+    }
 }
 
 
