@@ -1,4 +1,5 @@
 import * as AuthPlaintext from './auth/plaintext';
+import * as AuthBcrypt from './auth/bcrypt';
 
 
 const CASTLE_STR_PREFIX = "ca571e";
@@ -30,6 +31,8 @@ export function registerAuthenticator(
 
 registerAuthenticator( AuthPlaintext.AUTH_NAME,
     AuthPlaintext.register() );
+registerAuthenticator( AuthBcrypt.AUTH_NAME,
+    AuthBcrypt.register() );
 
 
 export function isMatch(
@@ -151,13 +154,11 @@ export class Castellated
                     );
                     const auth = parsed_passwd.auth;
 
-                    if( auth.isMatch( passwd, parsed_passwd ) ) {
-                        // TODO if not on preferred type, change it
-                        resolve( true );
-                    }
-                    else {
-                        resolve( false );
-                    }
+                    auth
+                        .isMatch( passwd, parsed_passwd )
+                        .then( (result) => {
+                            resolve( result );
+                        });
                 }
             );
         });
@@ -178,5 +179,5 @@ export interface Authenticator
     isMatch(
         incoming_passwd: string
         ,stored_passwd: PasswordString
-    ): boolean;
+    ): Promise<boolean>;
 }

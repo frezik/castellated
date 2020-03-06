@@ -1,5 +1,5 @@
 import * as Castle from '../src/castellated';
-import * as Auth from '../src/auth/plaintext';
+import * as Auth from '../src/auth/bcrypt';
 import * as Tap from 'tap';
 
 Tap.plan( 2 );
@@ -7,22 +7,23 @@ Tap.plan( 2 );
 const stored_passwd = new Castle.PasswordString( [
     "ca571e"
     ,"v1"
-    ,"plain"
-    ,"plain"
-    ,"foobar"
+    ,"bcrypt"
+    ,"10"
+    // bcrypt string of "foobar"
+    ,"$2b$10$wOWIkiks.tbbftwkJ81BNeuOtq631SzbsVOO7VAHf5ziH.edAAqJi"
 ].join("-") );
-const plain = new Auth.PlaintextAuth();
+const crypt = new Auth.BcryptAuth();
 
 Tap.comment( `Stored password: ${stored_passwd}` );
 Tap.comment( `Stored password parsed: ${stored_passwd.passwd_data}` );
 
-plain.isMatch(
+crypt.isMatch(
     "foobar"
     ,stored_passwd
 ).then( (result) => {
     Tap.ok( result, "Password matches" );
 });
-plain.isMatch(
+crypt.isMatch(
     "barfoo"
     ,stored_passwd
 ).then( (result) => {

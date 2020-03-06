@@ -22,7 +22,9 @@
     "url": "https://github.com/frezik/castellated/issues"
   },
   "homepage": "https://github.com/frezik/castellated#readme",
-  "dependencies": {},
+  "dependencies": {
+    "bcrypt": "^4.0.1"
+  },
   "devDependencies": {
     "@types/node": "^13.5.0",
     "tap": "^14.10.6"

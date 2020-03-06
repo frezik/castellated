@@ -4,24 +4,20 @@ import * as Tap from 'tap';
 
 class MockAuth
 {
-    args_str: string;
-
-    constructor(
-        args_str: string
-    ) {
-        this.args_str = args_str;
-    }
-
     isMatch(
-    ): boolean
+        incoming_passwd: string
+        ,stored_passwd: Castle.PasswordString
+    ): Promise<boolean>
     {
-        return true;
+        return new Promise( (resolve, reject) => {
+            resolve( true );
+        });
     }
 }
 Castle.registerAuthenticator(
     "mock"
-    ,( arg_str: string ) => {
-        return new MockAuth( arg_str );
+    ,(args_str: string) => {
+        return new MockAuth();
     }
 );
 
