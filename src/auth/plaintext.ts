@@ -3,7 +3,7 @@ import * as Password from '../password_string';
 
 export const AUTH_NAME = "plain";
 
-export function register( args_str ): void
+export function register(): void
 {
     Castellated.registerAuthenticator( AUTH_NAME,
         ( args_str: string ): Castellated.Authenticator => {

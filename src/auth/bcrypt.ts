@@ -4,7 +4,7 @@ import * as Password from '../password_string';
 
 export const AUTH_NAME = "bcrypt";
 
-export function register( args_str: string ): void
+export function register(): void
 {
     Castellated.registerAuthenticator( AUTH_NAME, 
         ( args_str: string): Castellated.Authenticator => {

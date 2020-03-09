@@ -4,7 +4,7 @@ import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 2 );
-Auth.register("");
+Auth.register();
 
 const stored_passwd = new Password.PasswordString( [
     "ca571e"

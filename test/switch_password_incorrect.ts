@@ -9,8 +9,8 @@ const GOOD_PASSWD_UNENCODED = "secretpass";
 const BAD_PASSWD = "bar";
 
 Tap.plan( 2 );
-BcryptAuth.register( "10" );
-PlainAuth.register( "" );
+BcryptAuth.register();
+PlainAuth.register();
 
 let encoded_passwd = GOOD_PASSWD;
 const fetch_callback = (

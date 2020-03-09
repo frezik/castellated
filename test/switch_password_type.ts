@@ -8,8 +8,8 @@ const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
 const GOOD_PASSWD_UNENCODED = "secretpass";
 
 Tap.plan( 3 );
-BcryptAuth.register( "10" );
-PlainAuth.register( "" );
+BcryptAuth.register();
+PlainAuth.register();
 
 let encoded_passwd = GOOD_PASSWD;
 const fetch_callback = (
