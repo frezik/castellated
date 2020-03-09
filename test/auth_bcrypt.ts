@@ -1,10 +1,12 @@
 import * as Castle from '../src/castellated';
 import * as Auth from '../src/auth/bcrypt';
+import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 2 );
+Auth.register( "10" );
 
-const stored_passwd = new Castle.PasswordString( [
+const stored_passwd = new Password.PasswordString( [
     "ca571e"
     ,"v1"
     ,"bcrypt"

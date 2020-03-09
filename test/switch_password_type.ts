@@ -1,4 +1,6 @@
 import * as Castle from '../index';
+import * as BcryptAuth from '../src/auth/bcrypt';
+import * as PlainAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
@@ -6,6 +8,8 @@ const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
 const GOOD_PASSWD_UNENCODED = "secretpass";
 
 Tap.plan( 3 );
+BcryptAuth.register( "10" );
+PlainAuth.register( "" );
 
 let encoded_passwd = GOOD_PASSWD;
 const fetch_callback = (

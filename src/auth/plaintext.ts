@@ -1,13 +1,23 @@
 import * as Castellated from '../castellated';
+import * as Password from '../password_string';
 
 export const AUTH_NAME = "plain";
+
+export function register( args_str ): void
+{
+    Castellated.registerAuthenticator( AUTH_NAME,
+        ( args_str: string ): Castellated.Authenticator => {
+            return new PlaintextAuth();
+        }
+    );
+}
 
 
 export class PlaintextAuth
 {
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Castellated.PasswordString
+        ,stored_passwd: Password.PasswordString
     ): Promise<boolean>
     {
         return new Promise( (resolve, reject) => {
@@ -20,7 +30,7 @@ export class PlaintextAuth
     }
 
     sameAuth(
-        passwd: Castellated.PasswordString
+        passwd: Password.PasswordString
     ): boolean
     {
         return (AUTH_NAME == passwd.crypt_type);
@@ -28,9 +38,9 @@ export class PlaintextAuth
 
     encode(
         passwd: string
-    ): Promise<Castellated.PasswordString>
+    ): Promise<Password.PasswordString>
     {
-        const new_passwd = new Castellated.PasswordString([
+        const new_passwd = new Password.PasswordString([
             Castellated.CASTLE_STR_PREFIX
             ,"v" + Castellated.CASTLE_STR_VERSION
             ,AUTH_NAME
@@ -42,15 +52,4 @@ export class PlaintextAuth
             resolve( new_passwd );
         });
     }
-}
-
-
-export function register(): Castellated.AuthCallback
-{
-    const builder = (
-        args_str: string
-    ): Castellated.Authenticator => {
-        return new PlaintextAuth();
-    };
-    return builder;
 }

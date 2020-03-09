@@ -1,7 +1,17 @@
 import * as Castellated from '../castellated';
 import * as Bcrypt from 'bcrypt';
+import * as Password from '../password_string';
 
 export const AUTH_NAME = "bcrypt";
+
+export function register( args_str: string ): void
+{
+    Castellated.registerAuthenticator( AUTH_NAME, 
+        ( args_str: string): Castellated.Authenticator => {
+            return new BcryptAuth( args_str );
+        }
+    );
+}
 
 
 export class BcryptAuth
@@ -19,7 +29,7 @@ export class BcryptAuth
 
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Castellated.PasswordString
+        ,stored_passwd: Password.PasswordString
     ): Promise<boolean>
     {
         const want_passwd = stored_passwd.passwd_data;
@@ -27,7 +37,7 @@ export class BcryptAuth
     }
 
     sameAuth(
-        passwd: Castellated.PasswordString
+        passwd: Password.PasswordString
     ): boolean
     {
         return (AUTH_NAME == passwd.crypt_type)
@@ -36,12 +46,12 @@ export class BcryptAuth
 
     encode(
         passwd: string
-    ): Promise<Castellated.PasswordString>
+    ): Promise<Password.PasswordString>
     {
         return Bcrypt
             .hash( passwd, this.rounds )
             .then( (hash) => {
-                const new_passwd = new Castellated.PasswordString([
+                const new_passwd = new Password.PasswordString([
                     Castellated.CASTLE_STR_PREFIX
                     ,"v" + Castellated.CASTLE_STR_VERSION
                     ,AUTH_NAME
@@ -54,15 +64,4 @@ export class BcryptAuth
                 });
             });
     }
-}
-
-
-export function register(): Castellated.AuthCallback
-{
-    const builder = (
-        args_str: string
-    ): Castellated.Authenticator => {
-        return new BcryptAuth( args_str );
-    };
-    return builder;
 }
