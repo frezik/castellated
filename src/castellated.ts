@@ -1,3 +1,4 @@
+import Authenticator from './authenticator';
 import * as Password from './password_string';
 
 
@@ -166,20 +167,4 @@ export class Castellated
                 });
         });
     }
-}
-
-export interface Authenticator
-{
-    isMatch(
-        incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
-    ): Promise<boolean>;
-
-    sameAuth(
-        passwd: Password.PasswordString
-    ): boolean;
-
-    encode(
-        passwd: string
-    ): Promise<Password.PasswordString>;
 }

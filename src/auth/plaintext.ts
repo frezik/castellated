@@ -1,3 +1,4 @@
+import Authenticator from '../authenticator';
 import * as Castellated from '../castellated';
 import * as Password from '../password_string';
 
@@ -6,7 +7,7 @@ export const AUTH_NAME = "plain";
 export function register(): void
 {
     Castellated.registerAuthenticator( AUTH_NAME,
-        ( args_str: string ): Castellated.Authenticator => {
+        ( args_str: string ): Authenticator => {
             return new PlaintextAuth();
         }
     );

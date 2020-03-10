@@ -1,3 +1,4 @@
+import Authenticator from './authenticator';
 import * as Castle from './castellated';
 
 
@@ -9,7 +10,7 @@ export class PasswordString
     crypt_type: string;
     crypt_args: string;
     passwd_data: string;
-    auth: Castle.Authenticator;
+    auth: Authenticator;
 
     constructor(
         str: string
@@ -41,7 +42,7 @@ export class PasswordString
     private getAuthByString(
         crypt_type: string
         ,crypt_args: string
-    ): Castle.Authenticator
+    ): Authenticator
     {
         let auth_callback = Castle.getAuthByName( crypt_type );
         if( auth_callback ) {
