@@ -1,6 +1,9 @@
 import Authenticator from './authenticator';
 import * as Castle from './castellated';
 
+export const PASSWORD_STRING_FORMATTING_EXCEPTION
+    = "PasswordStringFormattingException";
+
 
 export class PasswordString
 {
@@ -29,6 +32,12 @@ export class PasswordString
                 this.crypt_type
                 ,this.crypt_args
             );
+        }
+        else {
+            let err = new Error( `Castellated password string "${str}"`
+                + ` is incorrectly formatted` );
+            err.name = PASSWORD_STRING_FORMATTING_EXCEPTION;
+            throw err;
         }
     }
 

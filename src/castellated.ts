@@ -69,6 +69,11 @@ type updatePasswdCallbackType = (
     ,passwd: string
 ) => Promise<void>;
 
+type fallbackAuthenticatorCallbackType = (
+    username: string
+    ,passwd: string
+) => Promise<boolean>;
+
 
 export class Castellated
 {
@@ -77,6 +82,7 @@ export class Castellated
     private auth_preferred: Authenticator;
     private fetch_passwd_callback: fetchPasswdCallbackType;
     private update_passwd_callback: updatePasswdCallbackType;
+    private fallback_authenticator: fallbackAuthenticatorCallbackType;
 
     constructor(
         auth_preferred_type: string
@@ -109,32 +115,37 @@ export class Castellated
         return new Promise<boolean>( (resolve, reject) => {
             this.fetch_passwd_callback( username ).then(
                 (correct_passwd) => {
-                    const parsed_passwd = new Password.PasswordString(
-                        correct_passwd
-                    );
-                    const auth = parsed_passwd.auth;
-
-                    return auth
-                        .isMatch( passwd, parsed_passwd )
-                        .then( (is_match) => {
-                            if( is_match && (! this.auth_preferred
-                                .sameAuth( parsed_passwd )
-                            )) {
-                                return this.reencode( 
-                                    username
-                                    ,passwd
-                                );
-                            }
-                            else {
-                                return new Promise( (new_resolve) => {
-                                    new_resolve( is_match );
-                                });
-                            }
-                        });
-                })
-                .then( (result: boolean) => {
-                    resolve( result );
-                });
+                    try {
+                        const parsed_passwd = new Password.PasswordString(
+                            correct_passwd
+                        );
+                        return this.runParsedPassword(
+                            username
+                            ,parsed_passwd
+                            ,passwd
+                        );
+                    }
+                    catch( err ) {
+                        if( (Password
+                            .PASSWORD_STRING_FORMATTING_EXCEPTION
+                            == err.name 
+                        ) && this.fallback_authenticator ) {
+                            // String was malformatted, try the fallback
+                            // authenticator since we have one
+                            return this.runFallbackAuthenticator(
+                                username
+                                ,passwd
+                            );
+                        }
+                        else {
+                            throw err;
+                        }
+                    }
+                }
+            )
+            .then( (is_ok) => {
+                resolve( is_ok );
+            });
         });
     }
 
@@ -145,6 +156,13 @@ export class Castellated
             // TODO
             resolve();
         });
+    }
+
+    setFallbackAuthenticator(
+        auth: fallbackAuthenticatorCallbackType
+    ): void
+    {
+        this.fallback_authenticator = auth;
     }
 
     private reencode(
@@ -165,6 +183,61 @@ export class Castellated
                 .then( () => {
                     resolve( true );
                 });
+        });
+    }
+
+    private runParsedPassword(
+        username: string
+        ,parsed_passwd: Password.PasswordString
+        ,incoming_passwd: string
+    ): Promise<boolean>
+    {
+        const auth = parsed_passwd.auth;
+        return auth
+            .isMatch( incoming_passwd, parsed_passwd )
+            .then( (is_match) => {
+                if( is_match
+                    && (! this.auth_preferred.sameAuth( parsed_passwd ) )
+                ) {
+                    return this.reencode(
+                        username
+                        ,incoming_passwd
+                    );
+                }
+                else {
+                    return new Promise( (resolve) => {
+                        resolve( is_match );
+                    });
+                }
+            });
+    }
+
+    private runFallbackAuthenticator(
+        username: string
+        ,incoming_passwd: string
+    ): Promise<boolean>
+    {
+        return new Promise( (resolve, reject) => {
+            this.fallback_authenticator(
+                username
+                ,incoming_passwd
+            )
+            .then( (is_match) => {
+                if( is_match ) {
+                    return this.reencode(
+                        username
+                        ,incoming_passwd
+                    );
+                }
+                else {
+                    return new Promise( (resolve, reject) => {
+                        resolve( false );
+                    });
+                }
+            })
+            .then( (is_ok: boolean) => {
+                resolve( is_ok );
+            });
         });
     }
 }

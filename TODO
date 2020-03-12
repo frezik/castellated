@@ -1,7 +1,4 @@
-* If stored password doesn't match castellated string, handle it as a 
-  default type (helps people transition)
 * Add a new user
-* Break up castellated.ts into smaller files
 * Implement encryption types:
     * argon2
     * scrypt
