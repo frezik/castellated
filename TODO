@@ -1,5 +1,6 @@
-* Add a new user
 * Implement encryption types:
     * argon2
     * scrypt
+* Run through Big List of Naughty Strings
+    * https://github.com/minimaxir/big-list-of-naughty-strings
 * Documentation

@@ -1,6 +1,5 @@
 import * as Castle from '../index';
-import * as BcryptAuth from '../src/auth/bcrypt';
-import * as PlainAuth from '../src/auth/plaintext';
+import * as PlaintextAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
@@ -8,15 +7,16 @@ const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
 const GOOD_PASSWD_UNENCODED = "secretpass";
 
 Tap.plan( 3 );
-BcryptAuth.register();
-PlainAuth.register();
+PlaintextAuth.register();
 
-let encoded_passwd = GOOD_PASSWD;
+
+let stored_username = "";
+let stored_passwd = "";
 const fetch_callback = (
     username: string
 ): Promise<string> => {
     return new Promise<string>( (resolve, reject) => {
-        resolve( encoded_passwd );
+        resolve( GOOD_PASSWD );
     });
 };
 const update_callback = (
@@ -24,7 +24,6 @@ const update_callback = (
     ,passwd: string
 ): Promise<void> => {
     return new Promise<void>( (resolve, reject) => {
-        encoded_passwd = passwd;
         resolve();
     });
 };
@@ -33,29 +32,30 @@ const add_user_callback = (
     ,passwd: string
 ): Promise<void> => {
     return new Promise<void>( (resolve, reject) => {
-        // Ignore
+        stored_username = username;
+        stored_passwd = passwd;
         resolve();
     });
 };
 
 
 const castle = new Castle.Castellated(
-    "bcrypt"
-    ,"10"
+    "plain"
+    ,"plain"
     ,fetch_callback
     ,update_callback
     ,add_user_callback
 );
+
 castle
-    .match( USERNAME, GOOD_PASSWD_UNENCODED )
-    .then( (is_matched) => {
-        Tap.ok( is_matched, "Password matched" );
+    .addUser( USERNAME, GOOD_PASSWD_UNENCODED )
+    .then( () => {
+        Tap.equals( stored_username, USERNAME, "Username stored" );
+        Tap.equals( stored_passwd, GOOD_PASSWD, "Password stored" );
     })
     .then( () => {
-        Tap.ok( encoded_passwd.match( /^ca571e-v1-bcrypt/ )
-            ,"Stored password changed encoding" );
         return castle.match( USERNAME, GOOD_PASSWD_UNENCODED );
     })
-    .then( (is_matched) => {
-        Tap.ok( is_matched, "Reencoded password still matches" );
+    .then( (is_match) => {
+        Tap.ok( is_match, "Matched password after creating user" );
     });

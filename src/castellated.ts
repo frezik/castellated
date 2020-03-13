@@ -74,6 +74,11 @@ type fallbackAuthenticatorCallbackType = (
     ,passwd: string
 ) => Promise<boolean>;
 
+type addUserCallbackType = (
+    username: string
+    ,passwd: string
+) => Promise<void>;
+
 
 export class Castellated
 {
@@ -83,18 +88,21 @@ export class Castellated
     private fetch_passwd_callback: fetchPasswdCallbackType;
     private update_passwd_callback: updatePasswdCallbackType;
     private fallback_authenticator: fallbackAuthenticatorCallbackType;
+    private add_user_callback: addUserCallbackType;
 
     constructor(
         auth_preferred_type: string
         ,auth_args_string: string
         ,fetch_passwd_callback: fetchPasswdCallbackType
         ,update_passwd_callback: updatePasswdCallbackType
+        ,add_user_callback: addUserCallbackType
     )
     {
         this.auth_preferred_type = auth_preferred_type;
         this.auth_args_string = auth_args_string;
         this.fetch_passwd_callback = fetch_passwd_callback;
         this.update_passwd_callback = update_passwd_callback;
+        this.add_user_callback = add_user_callback;
 
         if( AUTH_BY_TYPE[this.auth_preferred_type] ) {
             const callback = AUTH_BY_TYPE[ this.auth_preferred_type ];
@@ -150,11 +158,22 @@ export class Castellated
     }
 
     addUser(
+        username: string
+        ,password: string
     ): Promise<void>
     {
         return new Promise<void>( (resolve, reject) => {
-            // TODO
-            resolve();
+            const password_string = Password.buildFromPlain(
+                password
+            );
+            this
+                .add_user_callback(
+                    username
+                    ,password_string.toString()
+                )
+                .then( () => {
+                    resolve();
+                });
         });
     }
 

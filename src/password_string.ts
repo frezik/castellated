@@ -5,6 +5,24 @@ export const PASSWORD_STRING_FORMATTING_EXCEPTION
     = "PasswordStringFormattingException";
 
 
+export function buildFromPlain(
+    plain_passwd: string
+): PasswordString
+{
+    const full_string = [
+        Castle.CASTLE_STR_PREFIX
+        ,"v" + Castle.CASTLE_STR_VERSION
+        // TODO set to preferred encryption type
+        ,"plain"
+        ,"plain"
+        ,plain_passwd
+    ].join( Castle.CASTLE_STR_SEP );
+
+    const parsed_string = new PasswordString( full_string );
+    return parsed_string;
+}
+
+
 export class PasswordString
 {
     orig_str: string;

@@ -29,6 +29,15 @@ const update_callback = (
         resolve();
     });
 };
+const add_user_callback = (
+    username: string
+    ,passwd: string
+): Promise<void> => {
+    return new Promise<void>( (resolve, reject) => {
+        // Ignore
+        resolve();
+    });
+};
 
 
 const castle = new Castle.Castellated(
@@ -36,6 +45,7 @@ const castle = new Castle.Castellated(
     ,"10"
     ,fetch_callback
     ,update_callback
+    ,add_user_callback
 );
 castle
     .match( USERNAME, BAD_PASSWD )
