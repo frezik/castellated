@@ -7,14 +7,15 @@ export const PASSWORD_STRING_FORMATTING_EXCEPTION
 
 export function buildFromPlain(
     plain_passwd: string
+    ,encryption_type = "plain"
+    ,encryption_args = "plain"
 ): PasswordString
 {
     const full_string = [
         Castle.CASTLE_STR_PREFIX
         ,"v" + Castle.CASTLE_STR_VERSION
-        // TODO set to preferred encryption type
-        ,"plain"
-        ,"plain"
+        ,encryption_type
+        ,encryption_args
         ,plain_passwd
     ].join( Castle.CASTLE_STR_SEP );
 

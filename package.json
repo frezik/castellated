@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/frezik/castellated#readme",
   "dependencies": {
+    "argon2": "^0.26.1",
     "bcrypt": "^4.0.1"
   },
   "devDependencies": {
