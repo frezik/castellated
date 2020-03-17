@@ -4,7 +4,7 @@ import * as BcryptAuth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
-Tap.plan( 4 );
+Tap.plan( 5 );
 Auth.register();
 BcryptAuth.register();
 
@@ -31,6 +31,11 @@ plain.isMatch(
     ,stored_passwd
 ).then( (result) => {
     Tap.ok(! result, "Bad password doesn't match" );
+});
+
+plain.encode( "foobar" ).then( (result) => {
+    Tap.equal( result.toString(), stored_passwd.toString(),
+        "Encoded password correctly" );
 });
 
 const same_auth = new Password.PasswordString( [
