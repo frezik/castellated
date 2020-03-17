@@ -1,6 +1,5 @@
 import Authenticator from '../authenticator';
 import * as Castellated from '../castellated';
-import * as Bcrypt from 'bcrypt';
 import * as Argon2 from 'argon2';
 import * as Password from '../password_string';
 
@@ -101,7 +100,9 @@ export class Argon2Auth
 
         if(! time_cost ) throw `Could not parse 't' param in argon2 string: ${arg_str}`;
         if(! memory_cost ) throw `Could not parse 'm' param in argon2 string: ${arg_str}`;
-        if(! parallelism ) throw `Could not parse 'f' param in argon2 string: ${arg_str}`;
+        if(! parallelism ) throw `Could not parse 'p' param in argon2 string: ${arg_str}`;
+        if(! argon_type ) throw `Could not parse 'f' param in argon2 string: ${arg_str}`;
+
 
         return {
             time_cost: parseInt( time_cost[1] )
