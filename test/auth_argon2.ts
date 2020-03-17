@@ -1,10 +1,12 @@
 import * as Castle from '../src/castellated';
 import * as Auth from '../src/auth/argon2';
+import * as BcryptAuth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
-Tap.plan( 2 );
+Tap.plan( 5 );
 Auth.register();
+BcryptAuth.register();
 
 const ARGON2_ARGS_STRING = 't:3,m:65536,p:2,f:2i';
 const stored_passwd = new Password.PasswordString( [
@@ -33,5 +35,32 @@ crypt.isMatch(
     Tap.ok(! result, "Bad password doesn't match" );
 });
 
+crypt
+    .encode( "foobar" )
+    .then( (result) => {
+        return crypt.isMatch(
+            "foobar"
+            ,stored_passwd
+        );
+    })
+    .then( (result) => {
+        Tap.ok( result, "Encoded password correctly" );
+    });
 
-// TODO encode password, same auth check
+
+const same_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"argon2"
+    ,ARGON2_ARGS_STRING
+    ,"barfoo"
+].join("-") );
+const diff_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"argon2"
+    ,'t:2,m:65536,p:2,f:2i'
+    ,"barfoo"
+].join("-") );
+Tap.ok( crypt.sameAuth( same_auth ), "Same auth checked correctly" );
+Tap.ok(! crypt.sameAuth( diff_auth ), "Different auth checked correctly" );

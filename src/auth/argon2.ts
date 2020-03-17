@@ -117,10 +117,10 @@ export class Argon2Auth
     ): string
     {
         const arg_str = [
-            '"t":' + args.time_cost
-            ,'"m":' + args.memory_cost
-            ,'"p":' + args.parallelism
-            ,'"f":"' + args.argon_type + '"'
+            't:' + args.time_cost
+            ,'m:' + args.memory_cost
+            ,'p:' + args.parallelism
+            ,'f:' + args.argon_type
         ].join( "," );
         return arg_str;
     }
