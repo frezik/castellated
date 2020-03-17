@@ -1,10 +1,12 @@
 import * as Castle from '../src/castellated';
 import * as Auth from '../src/auth/plaintext';
+import * as BcryptAuth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
-Tap.plan( 2 );
+Tap.plan( 4 );
 Auth.register();
+BcryptAuth.register();
 
 const stored_passwd = new Password.PasswordString( [
     "ca571e"
@@ -30,3 +32,20 @@ plain.isMatch(
 ).then( (result) => {
     Tap.ok(! result, "Bad password doesn't match" );
 });
+
+const same_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"plain"
+    ,"plain"
+    ,"barfoo"
+].join("-") );
+const diff_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"bcrypt"
+    ,"plain"
+    ,"barfoo"
+].join("-") );
+Tap.ok( plain.sameAuth( same_auth ), "Same auth checked correctly" );
+Tap.ok(! plain.sameAuth( diff_auth ), "Different auth checked correctly" );
