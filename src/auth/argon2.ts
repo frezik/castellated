@@ -3,16 +3,7 @@ import * as Castellated from '../castellated';
 import * as Argon2 from 'argon2';
 import * as Password from '../password_string';
 
-export const AUTH_NAME = "argon2";
-
-export function register(): void
-{
-    Castellated.registerAuthenticator( AUTH_NAME, 
-        ( args_str: string): Authenticator => {
-            return new Argon2Auth( args_str );
-        }
-    );
-}
+const AUTH_NAME = "argon2";
 
 
 type argonArgs = {
@@ -21,7 +12,7 @@ type argonArgs = {
     ,parallelism: number
     ,argon_type: string
 };
-export class Argon2Auth
+export default class Argon2Auth
 {
     private orig_args_str: string;
     private time_cost: number;
@@ -39,6 +30,16 @@ export class Argon2Auth
         this.memory_cost = args.memory_cost;
         this.parallelism = args.parallelism;
         this.argon_type = args.argon_type;
+    }
+
+
+    static register(): void
+    {
+        Castellated.registerAuthenticator( AUTH_NAME, 
+            ( args_str: string): Authenticator => {
+                return new Argon2Auth( args_str );
+            }
+        );
     }
 
 

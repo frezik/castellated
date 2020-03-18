@@ -1,5 +1,5 @@
 import * as Castle from '../src/castellated';
-import * as Auth from '../src/auth/argon2';
+import Auth from '../src/auth/argon2';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
@@ -15,7 +15,7 @@ const stored_passwd = new Password.PasswordString( [
     // argon2 string of "foobar"
     ,"$argon2i$v=19$m=65536,t=3,p=2$4ov06yahY3n+ihIMvdShiA$d8jp/Ozv++K2J6exyPruFT0Xvz4blC58EwGV628+5oY"
 ].join("-") );
-const crypt = new Auth.Argon2Auth( ARGON2_ARGS_STRING );
+const crypt = new Auth( ARGON2_ARGS_STRING );
 
 Tap.comment( `Stored password: ${stored_passwd}` );
 Tap.comment( `Stored password parsed: ${stored_passwd.passwd_data}` );
