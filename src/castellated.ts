@@ -12,7 +12,7 @@ export const CASTLE_STR_REGEX = new RegExp([
     ,CASTLE_STR_SEP, "([^\\", CASTLE_STR_SEP, "]+)" // Crypt args
     ,CASTLE_STR_SEP, "(.*)" // Password data
     ,"$"
-].join( "" ));
+].join( "" ), 'm' );
 
 
 export type AuthCallback = (

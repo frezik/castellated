@@ -1,6 +1,1 @@
-* All auth types tests:
-    * Encode a new password
-    * Same auth check
-* Run through Big List of Naughty Strings
-    * https://github.com/minimaxir/big-list-of-naughty-strings
 * Documentation
