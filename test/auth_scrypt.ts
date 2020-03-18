@@ -3,7 +3,7 @@ import * as Auth from '../src/auth/scrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
-Tap.plan( 2 );
+Tap.plan( 5 );
 Auth.register();
 
 const SCRYPT_ARGS_STRING = 'c:16384,b:8,p:1,s:16,k:64,e:h,l:5476558450e3f2d9818d81b61ed570e1';
@@ -33,5 +33,31 @@ crypt.isMatch(
     Tap.ok(! result, "Bad password doesn't match" );
 });
 
+crypt
+    .encode( "foobar" )
+    .then( (result) => {
+        return crypt.isMatch(
+            "foobar"
+            ,stored_passwd
+        );
+    })
+    .then( (result) => {
+        Tap.ok( result, "Encoded password correctly" );
+    });
 
-// TODO encode password, same auth check
+const same_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"scrypt"
+    ,SCRYPT_ARGS_STRING
+    ,"barfoo"
+].join("-") );
+const diff_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"scrypt"
+    ,'c:16384,b:16,p:1,s:16,k:64,e:h,l:5476558450e3f2d9818d81b61ed570e1'
+    ,"foobar"
+].join("-") );
+Tap.ok( crypt.sameAuth( same_auth ), "Same auth checked correctly" );
+Tap.ok(! crypt.sameAuth( diff_auth ), "Different auth checked correctly" );
