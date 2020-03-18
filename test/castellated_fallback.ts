@@ -1,5 +1,5 @@
 import * as Castle from '../index';
-import * as PlaintextAuth from '../src/auth/plaintext';
+import PlaintextAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";

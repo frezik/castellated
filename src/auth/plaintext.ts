@@ -4,18 +4,19 @@ import * as Password from '../password_string';
 
 export const AUTH_NAME = "plain";
 
-export function register(): void
+
+export default class PlaintextAuth
 {
-    Castellated.registerAuthenticator( AUTH_NAME,
-        ( args_str: string ): Authenticator => {
-            return new PlaintextAuth();
-        }
-    );
-}
+    static register(): void
+    {
+        Castellated.registerAuthenticator( AUTH_NAME,
+            ( args_str: string ): Authenticator => {
+                return new PlaintextAuth();
+            }
+        );
+    }
 
 
-export class PlaintextAuth
-{
     isMatch(
         incoming_passwd: string
         ,stored_passwd: Password.PasswordString

@@ -5,15 +5,6 @@ import * as Password from '../password_string';
 
 export const AUTH_NAME = "scrypt";
 
-export function register(): void
-{
-    Castellated.registerAuthenticator( AUTH_NAME, 
-        ( args_str: string): Authenticator => {
-            return new ScryptAuth( args_str );
-        }
-    );
-}
-
 
 export enum SaltEncoding {
     hex = "h"
@@ -28,7 +19,7 @@ type scryptArgs = {
     ,block_size: number
     ,parallelism: number
 };
-export class ScryptAuth
+export default class ScryptAuth
 {
     private orig_args_str: string;
     private salt_len: number;
@@ -52,6 +43,15 @@ export class ScryptAuth
         this.cost = args.cost;
         this.block_size = args.block_size;
         this.parallelism = args.parallelism;
+    }
+
+    static register(): void
+    {
+        Castellated.registerAuthenticator( AUTH_NAME, 
+            ( args_str: string): Authenticator => {
+                return new ScryptAuth( args_str );
+            }
+        );
     }
 
 

@@ -1,11 +1,11 @@
 import * as Castle from '../src/castellated';
-import * as Auth from '../src/auth/plaintext';
+import Auth from '../src/auth/plaintext';
 import * as FS from 'fs';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Auth.register();
-const auth = new Auth.PlaintextAuth();
+const auth = new Auth();
 
 // List of indexes in the Big List of Naughty Strings that give us 
 // problems. TODO figure out why each one fails.

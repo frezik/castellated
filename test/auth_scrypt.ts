@@ -1,5 +1,5 @@
 import * as Castle from '../src/castellated';
-import * as Auth from '../src/auth/scrypt';
+import Auth from '../src/auth/scrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
@@ -15,7 +15,7 @@ const stored_passwd = new Password.PasswordString( [
     // scrypt string of "foobar"
     ,"cbeabcfbbdb72f771ea2315d4deb40097ba7c95709a907edb3b811293160273e87f997bd02830e670e7d22c79136681c75035117553d50a04859bb43c7b6da41"
 ].join("-") );
-const crypt = new Auth.ScryptAuth( SCRYPT_ARGS_STRING );
+const crypt = new Auth( SCRYPT_ARGS_STRING );
 
 Tap.comment( `Stored password: ${stored_passwd}` );
 Tap.comment( `Stored password parsed: ${stored_passwd.passwd_data}` );

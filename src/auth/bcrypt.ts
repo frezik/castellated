@@ -5,17 +5,8 @@ import * as Password from '../password_string';
 
 export const AUTH_NAME = "bcrypt";
 
-export function register(): void
-{
-    Castellated.registerAuthenticator( AUTH_NAME, 
-        ( args_str: string): Authenticator => {
-            return new BcryptAuth( args_str );
-        }
-    );
-}
 
-
-export class BcryptAuth
+export default class BcryptAuth
 {
     private orig_args_str: string;
     private rounds: number;
@@ -25,6 +16,15 @@ export class BcryptAuth
     ) {
         this.orig_args_str = args_str;
         this.rounds = parseInt( args_str );
+    }
+
+    static register(): void
+    {
+        Castellated.registerAuthenticator( AUTH_NAME, 
+            ( args_str: string): Authenticator => {
+                return new BcryptAuth( args_str );
+            }
+        );
     }
 
 

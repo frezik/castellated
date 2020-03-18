@@ -1,6 +1,6 @@
 import * as Castle from '../src/castellated';
-import * as Auth from '../src/auth/plaintext';
-import * as BcryptAuth from '../src/auth/bcrypt';
+import Auth from '../src/auth/plaintext';
+import BcryptAuth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
@@ -15,7 +15,7 @@ const stored_passwd = new Password.PasswordString( [
     ,"plain"
     ,"foobar"
 ].join("-") );
-const plain = new Auth.PlaintextAuth();
+const plain = new Auth();
 
 Tap.comment( `Stored password: ${stored_passwd}` );
 Tap.comment( `Stored password parsed: ${stored_passwd.passwd_data}` );

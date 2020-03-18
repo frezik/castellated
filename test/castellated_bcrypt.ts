@@ -1,5 +1,5 @@
 import * as Castle from '../index';
-import * as Auth from '../src/auth/bcrypt';
+import Auth from '../src/auth/bcrypt';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
