@@ -3,7 +3,7 @@ import * as Auth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
-Tap.plan( 2 );
+Tap.plan( 5 );
 Auth.register();
 
 const stored_passwd = new Password.PasswordString( [
@@ -31,3 +31,32 @@ crypt.isMatch(
 ).then( (result) => {
     Tap.ok(! result, "Bad password doesn't match" );
 });
+
+crypt
+    .encode( "foobar" )
+    .then( (result) => {
+        return crypt.isMatch(
+            "foobar"
+            ,stored_passwd
+        );
+    })
+    .then( (result) => {
+        Tap.ok( result, "Encoded password correctly" );
+    });
+
+const same_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"bcrypt"
+    ,"10"
+    ,"foobar"
+].join("-") );
+const diff_auth = new Password.PasswordString( [
+    "ca571e"
+    ,"v1"
+    ,"bcrypt"
+    ,"11"
+    ,"foobar"
+].join("-") );
+Tap.ok( crypt.sameAuth( same_auth ), "Same auth checked correctly" );
+Tap.ok(! crypt.sameAuth( diff_auth ), "Different auth checked correctly" );

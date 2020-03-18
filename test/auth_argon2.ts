@@ -1,12 +1,10 @@
 import * as Castle from '../src/castellated';
 import * as Auth from '../src/auth/argon2';
-import * as BcryptAuth from '../src/auth/bcrypt';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 5 );
 Auth.register();
-BcryptAuth.register();
 
 const ARGON2_ARGS_STRING = 't:3,m:65536,p:2,f:2i';
 const stored_passwd = new Password.PasswordString( [
