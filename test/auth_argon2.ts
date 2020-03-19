@@ -1,13 +1,13 @@
 import * as Castle from '../src/castellated';
 import Auth from '../src/auth/argon2';
-import * as Password from '../src/password_string';
+import Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 5 );
 Auth.register();
 
 const ARGON2_ARGS_STRING = 't:3,m:65536,p:2,f:2i';
-const stored_passwd = new Password.PasswordString( [
+const stored_passwd = new Password( [
     "ca571e"
     ,"v1"
     ,"argon2"
@@ -46,14 +46,14 @@ crypt
     });
 
 
-const same_auth = new Password.PasswordString( [
+const same_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"argon2"
     ,ARGON2_ARGS_STRING
     ,"barfoo"
 ].join("-") );
-const diff_auth = new Password.PasswordString( [
+const diff_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"argon2"

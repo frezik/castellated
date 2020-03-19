@@ -1,14 +1,14 @@
 import * as Castle from '../src/castellated';
 import Auth from '../src/auth/plaintext';
 import BcryptAuth from '../src/auth/bcrypt';
-import * as Password from '../src/password_string';
+import Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 5 );
 Auth.register();
 BcryptAuth.register();
 
-const stored_passwd = new Password.PasswordString( [
+const stored_passwd = new Password( [
     "ca571e"
     ,"v1"
     ,"plain"
@@ -38,14 +38,14 @@ plain.encode( "foobar" ).then( (result) => {
         "Encoded password correctly" );
 });
 
-const same_auth = new Password.PasswordString( [
+const same_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"plain"
     ,"plain"
     ,"barfoo"
 ].join("-") );
-const diff_auth = new Password.PasswordString( [
+const diff_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"bcrypt"

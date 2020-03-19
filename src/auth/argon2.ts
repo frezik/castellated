@@ -1,7 +1,7 @@
 import Authenticator from '../authenticator';
 import Castellated from '../castellated';
 import * as Argon2 from 'argon2';
-import * as Password from '../password_string';
+import Password from '../password_string';
 
 const AUTH_NAME = "argon2";
 
@@ -45,7 +45,7 @@ export default class Argon2Auth
 
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: Password
     ): Promise<boolean>
     {
         const want_passwd = stored_passwd.passwd_data;
@@ -53,7 +53,7 @@ export default class Argon2Auth
     }
 
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: Password
     ): boolean
     {
         const args_str = passwd.crypt_args;
@@ -69,7 +69,7 @@ export default class Argon2Auth
 
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>
+    ): Promise<Password>
     {
         const args = {
             time_cost: this.time_cost

@@ -1,6 +1,6 @@
 import Authenticator from '../authenticator';
 import Castellated from '../castellated';
-import * as Password from '../password_string';
+import Password from '../password_string';
 
 export const AUTH_NAME = "plain";
 
@@ -19,7 +19,7 @@ export default class PlaintextAuth
 
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: Password
     ): Promise<boolean>
     {
         return new Promise( (resolve, reject) => {
@@ -32,7 +32,7 @@ export default class PlaintextAuth
     }
 
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: Password
     ): boolean
     {
         return (AUTH_NAME == passwd.crypt_type);
@@ -40,9 +40,9 @@ export default class PlaintextAuth
 
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>
+    ): Promise<Password>
     {
-        const new_passwd = new Password.PasswordString([
+        const new_passwd = new Password([
             Castellated.CASTLE_STR_PREFIX
             ,"v" + Castellated.CASTLE_STR_VERSION
             ,AUTH_NAME

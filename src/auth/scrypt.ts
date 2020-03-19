@@ -1,7 +1,7 @@
 import Authenticator from '../authenticator';
 import Castellated from '../castellated';
 import * as Crypto from 'crypto';
-import * as Password from '../password_string';
+import Password from '../password_string';
 
 export const AUTH_NAME = "scrypt";
 
@@ -57,7 +57,7 @@ export default class ScryptAuth
 
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: Password
     ): Promise<boolean>
     {
         const args = this.parseArgString(
@@ -91,7 +91,7 @@ export default class ScryptAuth
     }
 
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: Password
     ): boolean
     {
         const args_str = passwd.crypt_args;
@@ -110,7 +110,7 @@ export default class ScryptAuth
 
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>
+    ): Promise<Password>
     {
         const cost = this.cost;
         const block_size = this.block_size;
@@ -133,7 +133,7 @@ export default class ScryptAuth
                     ,r: block_size
                     ,p: parallelism
                 }, (err, res) => {
-                    const new_passwd = new Password.PasswordString([
+                    const new_passwd = new Password([
                         Castellated.CASTLE_STR_PREFIX
                         ,"v" + Castellated.CASTLE_STR_VERSION
                         ,AUTH_NAME

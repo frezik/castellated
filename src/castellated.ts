@@ -1,5 +1,5 @@
 import Authenticator from './authenticator';
-import * as Password from './password_string';
+import Password from './password_string';
 
 
 
@@ -132,7 +132,7 @@ export default class Castellated
             this.fetch_passwd_callback( username ).then(
                 (correct_passwd) => {
                     try {
-                        const parsed_passwd = new Password.PasswordString(
+                        const parsed_passwd = new Password(
                             correct_passwd
                         );
                         return this.runParsedPassword(
@@ -201,7 +201,7 @@ export default class Castellated
             this
                 .auth_preferred
                 .encode( passwd )
-                .then( (reencoded_passwd: Password.PasswordString ) => {
+                .then( (reencoded_passwd: Password ) => {
                     return this.update_passwd_callback(
                         username
                         ,reencoded_passwd.orig_str
@@ -215,7 +215,7 @@ export default class Castellated
 
     private runParsedPassword(
         username: string
-        ,parsed_passwd: Password.PasswordString
+        ,parsed_passwd: Password
         ,incoming_passwd: string
     ): Promise<boolean>
     {

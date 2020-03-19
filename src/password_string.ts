@@ -1,31 +1,12 @@
 import Authenticator from './authenticator';
 import Castle from './castellated';
 
-export const PASSWORD_STRING_FORMATTING_EXCEPTION
-    = "PasswordStringFormattingException";
 
-
-export function buildFromPlain(
-    plain_passwd: string
-    ,encryption_type = "plain"
-    ,encryption_args = "plain"
-): PasswordString
+export default class PasswordString
 {
-    const full_string = [
-        Castle.CASTLE_STR_PREFIX
-        ,"v" + Castle.CASTLE_STR_VERSION
-        ,encryption_type
-        ,encryption_args
-        ,plain_passwd
-    ].join( Castle.CASTLE_STR_SEP );
+    static PASSWORD_STRING_FORMATTING_EXCEPTION
+        = "PasswordStringFormattingException";
 
-    const parsed_string = new PasswordString( full_string );
-    return parsed_string;
-}
-
-
-export class PasswordString
-{
     orig_str: string;
     prefix; string;
     version: string;
@@ -55,7 +36,7 @@ export class PasswordString
         else {
             let err = new Error( `Castellated password string "${str}"`
                 + ` is incorrectly formatted` );
-            err.name = PASSWORD_STRING_FORMATTING_EXCEPTION;
+            err.name = PasswordString.PASSWORD_STRING_FORMATTING_EXCEPTION;
             throw err;
         }
     }
@@ -64,6 +45,24 @@ export class PasswordString
     toString(): string
     {
         return this.orig_str;
+    }
+
+    static buildFromPlain(
+        plain_passwd: string
+        ,encryption_type = "plain"
+        ,encryption_args = "plain"
+    ): PasswordString
+    {
+        const full_string = [
+            Castle.CASTLE_STR_PREFIX
+            ,"v" + Castle.CASTLE_STR_VERSION
+            ,encryption_type
+            ,encryption_args
+            ,plain_passwd
+        ].join( Castle.CASTLE_STR_SEP );
+
+        const parsed_string = new PasswordString( full_string );
+        return parsed_string;
     }
 
 

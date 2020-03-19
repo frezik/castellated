@@ -1,5 +1,5 @@
 import Castle from '../src/castellated';
-import * as Password from '../src/password_string';
+import Password from '../src/password_string';
 import * as Tap from 'tap';
 
 
@@ -7,7 +7,7 @@ class MockAuth
 {
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: Password
     ): Promise<boolean>
     {
         return new Promise( (resolve, reject) => {
@@ -16,7 +16,7 @@ class MockAuth
     }
 
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: Password
     ): boolean
     {
         return true;
@@ -24,10 +24,10 @@ class MockAuth
 
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>
+    ): Promise<Password>
     {
         return new Promise( (resolve, reject) => {
-            resolve( new Password.PasswordString([
+            resolve( new Password([
                 Castle.CASTLE_STR_PREFIX
                 ,"v" + Castle.CASTLE_STR_VERSION
                 ,"mock"
@@ -46,7 +46,7 @@ Castle.registerAuthenticator(
 
 
 const passwd = "ca571e-v1-mock-plain-secretpass";
-const parser = new Password.PasswordString( passwd );
+const parser = new Password( passwd );
 const auth = parser.auth;
 
 Tap.ok( auth, "Got authenticator" );

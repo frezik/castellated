@@ -1,7 +1,7 @@
 import Authenticator from '../authenticator';
 import Castellated from '../castellated';
 import * as Bcrypt from 'bcrypt';
-import * as Password from '../password_string';
+import Password from '../password_string';
 
 export const AUTH_NAME = "bcrypt";
 
@@ -30,7 +30,7 @@ export default class BcryptAuth
 
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: Password
     ): Promise<boolean>
     {
         const want_passwd = stored_passwd.passwd_data;
@@ -38,7 +38,7 @@ export default class BcryptAuth
     }
 
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: Password
     ): boolean
     {
         return (AUTH_NAME == passwd.crypt_type)
@@ -47,12 +47,12 @@ export default class BcryptAuth
 
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>
+    ): Promise<Password>
     {
         return Bcrypt
             .hash( passwd, this.rounds )
             .then( (hash) => {
-                const new_passwd = new Password.PasswordString([
+                const new_passwd = new Password([
                     Castellated.CASTLE_STR_PREFIX
                     ,"v" + Castellated.CASTLE_STR_VERSION
                     ,AUTH_NAME

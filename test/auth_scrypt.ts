@@ -1,13 +1,13 @@
 import * as Castle from '../src/castellated';
 import Auth from '../src/auth/scrypt';
-import * as Password from '../src/password_string';
+import Password from '../src/password_string';
 import * as Tap from 'tap';
 
 Tap.plan( 5 );
 Auth.register();
 
 const SCRYPT_ARGS_STRING = 'c:16384,b:8,p:1,s:16,k:64,e:h,l:5476558450e3f2d9818d81b61ed570e1';
-const stored_passwd = new Password.PasswordString( [
+const stored_passwd = new Password( [
     "ca571e"
     ,"v1"
     ,"scrypt"
@@ -45,14 +45,14 @@ crypt
         Tap.ok( result, "Encoded password correctly" );
     });
 
-const same_auth = new Password.PasswordString( [
+const same_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"scrypt"
     ,SCRYPT_ARGS_STRING
     ,"barfoo"
 ].join("-") );
-const diff_auth = new Password.PasswordString( [
+const diff_auth = new Password( [
     "ca571e"
     ,"v1"
     ,"scrypt"
