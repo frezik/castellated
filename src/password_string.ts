@@ -1,5 +1,5 @@
 import Authenticator from './authenticator';
-import * as Castle from './castellated';
+import Castle from './castellated';
 
 export const PASSWORD_STRING_FORMATTING_EXCEPTION
     = "PasswordStringFormattingException";

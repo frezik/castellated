@@ -1,5 +1,5 @@
 import Authenticator from '../authenticator';
-import * as Castellated from '../castellated';
+import Castellated from '../castellated';
 import * as Argon2 from 'argon2';
 import * as Password from '../password_string';
 

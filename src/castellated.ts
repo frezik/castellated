@@ -2,17 +2,6 @@ import Authenticator from './authenticator';
 import * as Password from './password_string';
 
 
-export const CASTLE_STR_PREFIX = "ca571e";
-export const CASTLE_STR_VERSION = 1;
-export const CASTLE_STR_SEP = "-";
-export const CASTLE_STR_REGEX = new RegExp([
-    "^", "(", CASTLE_STR_PREFIX, ")"
-    ,CASTLE_STR_SEP, "v(", CASTLE_STR_VERSION, ")"
-    ,CASTLE_STR_SEP, "([^\\", CASTLE_STR_SEP, "]+)" // Crypt type
-    ,CASTLE_STR_SEP, "([^\\", CASTLE_STR_SEP, "]+)" // Crypt args
-    ,CASTLE_STR_SEP, "(.*)" // Password data
-    ,"$"
-].join( "" ), 'm' );
 
 
 export type AuthCallback = (
@@ -20,44 +9,6 @@ export type AuthCallback = (
 ) => Authenticator;
 
 let AUTH_BY_TYPE: object = {};
-
-export function registerAuthenticator(
-    name: string
-    ,auth_callback: AuthCallback
-): void
-{
-    AUTH_BY_TYPE[name] = auth_callback;
-}
-
-export function getAuthByName(
-    name: string
-): AuthCallback
-{
-    return AUTH_BY_TYPE[name];
-}
-
-
-export function isMatch(
-    str1: string
-    ,str2: string
-): boolean
-{
-    // Implement a constant-time algorithm for matching strings in 
-    // order to prevent timing attacks. Failing fast is OK for length 
-    // mismatch.
-    if( str1.length != str2.length ) {
-        return false;
-    }
-
-    let is_match = true;
-    for( let i = 0; i < str1.length; i++ ) {
-        if( str1.charAt( i ) != str2.charAt( i ) ) {
-            is_match = false;
-        }
-    }
-
-    return is_match;
-}
 
 
 type fetchPasswdCallbackType = (
@@ -80,8 +31,26 @@ type addUserCallbackType = (
 ) => Promise<void>;
 
 
-export class Castellated
+export default class Castellated
 {
+    static CASTLE_STR_PREFIX = "ca571e";
+    static CASTLE_STR_VERSION = 1;
+    static CASTLE_STR_SEP = "-";
+    static CASTLE_STR_REGEX = new RegExp([
+        "^", "(", Castellated.CASTLE_STR_PREFIX, ")"
+        ,Castellated.CASTLE_STR_SEP, "v("
+            ,Castellated.CASTLE_STR_VERSION
+        ,")"
+        ,Castellated.CASTLE_STR_SEP, "([^\\"
+            ,Castellated.CASTLE_STR_SEP
+        ,"]+)" // Crypt type
+        ,Castellated.CASTLE_STR_SEP, "([^\\"
+            ,Castellated.CASTLE_STR_SEP
+        ,"]+)" // Crypt args
+        ,Castellated.CASTLE_STR_SEP, "(.*)" // Password data
+        ,"$"
+    ].join( "" ), 'm' );
+
     private auth_preferred_type: string;
     private auth_args_string: string;
     private auth_preferred: Authenticator;
@@ -114,6 +83,45 @@ export class Castellated
             throw `Could not find authenticator for crypt type "${this.auth_preferred_type }"`;
         }
     }
+
+    static registerAuthenticator(
+        name: string
+        ,auth_callback: AuthCallback
+    ): void
+    {
+        AUTH_BY_TYPE[name] = auth_callback;
+    }
+
+    static getAuthByName(
+        name: string
+    ): AuthCallback
+    {
+        return AUTH_BY_TYPE[name];
+    }
+
+    static isMatch(
+        str1: string
+        ,str2: string
+    ): boolean
+    {
+        // Implement a constant-time algorithm for matching strings in 
+        // order to prevent timing attacks. Failing fast is OK for length 
+        // mismatch.
+        if( str1.length != str2.length ) {
+            return false;
+        }
+
+        let is_match = true;
+        for( let i = 0; i < str1.length; i++ ) {
+            if( str1.charAt( i ) != str2.charAt( i ) ) {
+                is_match = false;
+            }
+        }
+
+        return is_match;
+    }
+
+
 
     match(
         username: string

@@ -1,4 +1,4 @@
-import * as Castle from '../index';
+import Castle from '../index';
 import PlaintextAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
@@ -39,7 +39,7 @@ const add_user_callback = (
 };
 
 
-const castle = new Castle.Castellated(
+const castle = new Castle(
     "plain"
     ,"plain"
     ,fetch_callback

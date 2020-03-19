@@ -1,4 +1,4 @@
-import * as Castle from '../index';
+import Castle from '../index';
 import BcryptAuth from '../src/auth/bcrypt';
 import PlainAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
@@ -40,7 +40,7 @@ const add_user_callback = (
 };
 
 
-const castle = new Castle.Castellated(
+const castle = new Castle(
     "bcrypt"
     ,"10"
     ,fetch_callback

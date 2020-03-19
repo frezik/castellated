@@ -1,5 +1,5 @@
 import Authenticator from '../authenticator';
-import * as Castellated from '../castellated';
+import Castellated from '../castellated';
 import * as Bcrypt from 'bcrypt';
 import * as Password from '../password_string';
 

@@ -1,1 +1,2 @@
-export * from './src/castellated';
+import Castle from './src/castellated';
+export default Castle;

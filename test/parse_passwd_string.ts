@@ -1,4 +1,4 @@
-import * as Castle from '../src/castellated';
+import Castle from '../src/castellated';
 import * as Password from '../src/password_string';
 import * as Tap from 'tap';
 
