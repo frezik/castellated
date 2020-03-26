@@ -1,5 +1,4 @@
 import Castle from '../index';
-import PlaintextAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
@@ -8,7 +7,6 @@ const GOOD_PASSWD_UNENCODED = "secretpass";
 const BAD_PASSWD = "ca571e-v1-plain-plain-badpass";
 
 Tap.plan( 2 );
-PlaintextAuth.register();
 
 const fetch_callback = (
     username: string

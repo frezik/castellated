@@ -1,5 +1,4 @@
 import Castle from '../index';
-import Auth from '../src/auth/bcrypt';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
@@ -8,7 +7,6 @@ const GOOD_PASSWD_UNENCODED = "foobar";
 const BAD_PASSWD = "ca571e-v1-plain-plain-badpass";
 
 Tap.plan( 2 );
-Auth.register();
 
 const fetch_callback = (
     username: string

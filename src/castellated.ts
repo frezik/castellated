@@ -1,5 +1,9 @@
 import Authenticator from './authenticator';
 import Password from './password_string';
+import AuthArgon2 from './auth/argon2';
+import AuthBcrypt from './auth/bcrypt';
+import AuthPlaintext from './auth/plaintext';
+import AuthScrypt from './auth/scrypt';
 
 
 
@@ -50,6 +54,11 @@ export default class Castellated
         ,Castellated.CASTLE_STR_SEP, "(.*)" // Password data
         ,"$"
     ].join( "" ), 'm' );
+
+    static Argon2 = AuthArgon2;
+    static Bcrypt = AuthBcrypt;
+    static Plaintext = AuthPlaintext;
+    static Scrypt = AuthScrypt;
 
     private auth_preferred_type: string;
     private auth_args_string: string;

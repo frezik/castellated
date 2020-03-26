@@ -118,8 +118,11 @@ need.
   import Castle from 'castellated';
   import CustomAuth from 'MyCustomAuth';
   
-  Castle.Bcrypt.register();
   CustomAuth.register();
+
+By default, the system is already registered with authenticators for 
+argon2, bcrypt, plaintext, and scrypt. Note that the plaintext authenticator 
+is not recommended, and mostly exists for testing purposes.
 
 Next, we instantiate the main object, passing in our preferred encoding type 
 and a parameter string for it. We also pass in some callbacks, which we will 
