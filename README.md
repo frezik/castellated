@@ -68,9 +68,10 @@ derivation functions (specifically, bcrypt) use a block cipher at their core,
 which blurs the distinction between hasing and encryption.
 
 Throughout the documentation for Castellated, we try to use the term "encoded" 
-as a generic way of talking about protecting passwords. However, we recommend 
-setting pedantry aside and using "hash", "encrypt", and "encode interchangably 
-for this context.
+as a generic way of talking about protecting passwords. This does conflict 
+somewhat with encoding methods that aren't meant for security (like hex or 
+base64), but seems the best optional overall. We recommend setting pedantry 
+aside and using "hash", "encrypt", and "encode" interchangably in this context.
 
 ## The Storage String
 
@@ -90,7 +91,9 @@ The fields are:
 The internal format of the parameter field is determined by the authenticator 
 implementing it. Since bcrypt only has a single cost field, it puts that lone 
 number as its parameter field. An scrypt string has a more complicated 
-internal format.
+format. Each authenticator should cover their parameter string in their own 
+documentation.
+
 
 ## Storage Requirements
 
@@ -99,8 +102,13 @@ of arbitrary length. Castellated strings can get relatively long; a hex-encoded
 scrypt string in our test suite, for example, is 210 characters. We don't 
 expect even that's an upper limit on length.
 
-Just be sure your password field can take a very long string, perhaps as much 
+Be sure your password field can take a very long string, perhaps as much 
 as 1024 characters. If possible, leave it unbounded.
+
+*The string can contain newlines*. Be sure your storage mechanism allows this. 
+You may want to test storing the [Big List of Naughty Strings](https://github.com/minimaxir/big-list-of-naughty-strings)
+using the plaintext authenticator. That should iron out issues like this.
+
 
 ## Basic Usage
 
@@ -233,7 +241,60 @@ recommended to use this for password matching rather than
 
 ## Writing a New Authentication Method
 
-TODO
+If you want to write a new method of encoding passwords, start by implementing 
+the Authenticator interface. This has three methods, documented below. You also 
+need some way to register your new class with the overall system; by convention, 
+this is done with a `register()` static method. Finally, you'll be working 
+with the `PasswordString` object a lot, so be sure to read its documentation.
+
+### isMatch
+
+    isMatch(
+        incoming_passwd: string
+        ,stored_passwd: PasswordString
+    ): Promise<boolean>
+
+Returns a promise that returns true if the incoming plaintext password matches 
+the stored password (which will be encoded and in a `PasswordString` object).
+
+If the underlying library does not have a way to match passwords on its own
+, then you'll be tempted to write code like this:
+
+    const encoded_incoming_passwd = encode( incoming_passwd );
+    return ( encoded_incoming_passwd == stored_passwd.passwd_data );
+
+This code is vulnerable to timing attacks, as languages optimize their string 
+comparison to return false as soon as the first character doesn't match.
+Instead, use `isMatch()` from the main Castellated module:
+
+    import Castle from 'castellated';
+    ...
+    const encoded_incoming_passwd = encode( incoming_passwd );
+    return Castle.isMatch( encoded_incoming_passwd, stored_passwd.passwd_data );
+
+I know, you probably don't think it's possible for an attacker to figure out 
+the password by looking at small timing differences. In fact, timing attacks 
+on password matching has been done before in the wild. We made it easy to 
+do it right, so why not do it?
+
+### sameAuth
+
+    sameAuth(
+        passwd: PasswordString
+    ): boolean
+
+Return true if the `PasswordString` object is the same kind of authenticator 
+as you. This includes not just the name of the authenticator (like bcrypt), but 
+also that all important parameters match.
+
+### encode
+
+    encode(
+        passwd: string
+    ): Promise<PasswordString>
+
+Gets a plaintext password. Returns a promise that returns the encoded password 
+as a `PasswordString` object.
 
 ## Copyright
 
