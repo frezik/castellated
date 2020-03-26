@@ -299,6 +299,28 @@ also that all important parameters match.
 Gets a plaintext password. Returns a promise that returns the encoded password 
 as a `PasswordString` object.
 
+### static register()
+
+By convention, we have a static method named `register()` that registers the 
+authenticator with Castellated. This is done by calling
+`Castellated.registerAuthenticator()`.
+
+That method takes the name of your authenticator (like bcrypt) and a callback.
+The callback takes a string, which would be the argument string that your 
+authenticator encodes into `PasswordString.crypt_args`. It should return 
+an instantiated object of your authenticator.
+
+Example:
+
+        Castellated.registerAuthenticator( "bcrypt", 
+            ( args_str: string): Authenticator => {
+                return new BcryptAuth( args_str );
+            }
+        );
+
+Since this is convention, you're free to register by some other mechanisim. 
+You only need to call `Castellated.registerAuthenticator()` by some means.
+
 ## Copyright
 
 Copyright (c) 2020,  Timm Murray
