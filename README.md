@@ -29,6 +29,11 @@ The standard advice is missing adaptability. Consider these situations:
   change to get there? Would the strengthened parameter only apply to 
   new user signups, or would old users be updated automatically when they 
   next sign in?
+* You run a password storage system that was coded by some guy who left the 
+  company 5 years ago. It doesn't use salt, or it uses a weak salt, or it 
+  uses `crypt()`, or it has any number of other problems that make it weaker 
+  than it should be. You would like to replace it, but what do you do with 
+  all the passwords already in the system?
 
 Standard password storage advice rarely touches on these issues.
 
