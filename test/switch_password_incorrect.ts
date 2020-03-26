@@ -1,6 +1,4 @@
 import Castle from '../index';
-import BcryptAuth from '../src/auth/bcrypt';
-import PlainAuth from '../src/auth/plaintext';
 import * as Tap from 'tap';
 
 const USERNAME = "foo";
@@ -9,8 +7,6 @@ const GOOD_PASSWD_UNENCODED = "secretpass";
 const BAD_PASSWD = "bar";
 
 Tap.plan( 2 );
-BcryptAuth.register();
-PlainAuth.register();
 
 let encoded_passwd = GOOD_PASSWD;
 const fetch_callback = (
