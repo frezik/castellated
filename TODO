@@ -1,1 +1,5 @@
-* Documentation
+* Typescript Documentation for:
+    * argon2
+    * bcrypt
+    * plaintext
+    * scrypt

@@ -40,6 +40,16 @@ export default class Castellated
     static CASTLE_STR_PREFIX = "ca571e";
     static CASTLE_STR_VERSION = 1;
     static CASTLE_STR_SEP = "-";
+
+    /**
+     * A regex that can be used to match castellated strings. When matched, 
+     * it will have the following capture data:
+     * * "ca571e" prefix
+     * * Version number, without the leading "v"
+     * * Encoding name
+     * * Encoding args
+     * * Password data
+     */
     static CASTLE_STR_REGEX = new RegExp([
         "^", "(", Castellated.CASTLE_STR_PREFIX, ")"
         ,Castellated.CASTLE_STR_SEP, "v("
@@ -68,6 +78,13 @@ export default class Castellated
     private fallback_authenticator: fallbackAuthenticatorCallbackType;
     private add_user_callback: addUserCallbackType;
 
+    /**
+     * @param auth_preferred_type The name of the authenticator you prefer
+     * @param auth_args_string The args string for your preferred authenticator
+     * @param fetch_passwd_callback Called for fetching a password for a given user
+     * @param update_passwd_callback Called for updating a password for a given user
+     * @param add_user_callback Called for adding a new user
+     */
     constructor(
         auth_preferred_type: string
         ,auth_args_string: string
@@ -93,6 +110,12 @@ export default class Castellated
         }
     }
 
+    /**
+     * Registers an authenticator under the given name.
+     * 
+     * @param name The short name of the authenticator
+     * @param auth_callback Called to get the authenticator as an instantiated object
+     */
     static registerAuthenticator(
         name: string
         ,auth_callback: AuthCallback
@@ -101,6 +124,12 @@ export default class Castellated
         AUTH_BY_TYPE[name] = auth_callback;
     }
 
+    /**
+     * Fetches a given authenticator by its short name.
+     *
+     * @param name The short name of the authenticator
+     * @returns The instantiated authenticator object
+     */
     static getAuthByName(
         name: string
     ): AuthCallback
@@ -108,6 +137,11 @@ export default class Castellated
         return AUTH_BY_TYPE[name];
     }
 
+    /**
+     * Helper function for matching password strings in a constant-time 
+     * algorithm. To prevent timing attacks, use this to match passwords 
+     * instead of something like "passwd1 == passwd2".
+     */
     static isMatch(
         str1: string
         ,str2: string
@@ -132,6 +166,18 @@ export default class Castellated
 
 
 
+    /**
+     * Checks if the given username and plaintext password matches what is 
+     * stored for that user.
+     *
+     * If the stored password does not match the castellated string format, and 
+     * a fallback authenticator was set in {@link setFallbackAuthenticator}, 
+     * then the fallback authenticator will be tried.
+     *
+     * @param username The username to check
+     * @param passwd The password to check
+     * @returns A promise that yields a boolean, saying if the password matched or not
+     */
     match(
         username: string
         ,passwd: string
@@ -174,6 +220,13 @@ export default class Castellated
         });
     }
 
+    /**
+     * Adds a user to the storage.
+     *
+     * @param username The username to store
+     * @param password The plaintext password to encode and then store
+     * @returns A promise that resolves when storage is complete.
+     */
     addUser(
         username: string
         ,password: string
@@ -194,6 +247,13 @@ export default class Castellated
         });
     }
 
+    /**
+     * Sets a fallback authenticator, which will be used for password strings 
+     * that were stored, but not in castellated format. This is useful for 
+     * migrating existing systems into Castellated.
+     *
+     * @param auth The fallback callback
+     */
     setFallbackAuthenticator(
         auth: fallbackAuthenticatorCallbackType
     ): void

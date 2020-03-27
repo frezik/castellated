@@ -2,19 +2,51 @@ import Authenticator from './authenticator';
 import Castle from './castellated';
 
 
+/**
+ * Holds a password string that's been encoded into the Castellated format.
+ */
 export default class PasswordString
 {
+    /**
+     * A string holding the name of the exception that will be thrown for 
+     * strings that don't match the expected format.
+     */
     static PASSWORD_STRING_FORMATTING_EXCEPTION
         = "PasswordStringFormattingException";
 
+    /**
+     * The original formatted string.
+     */
     orig_str: string;
+    /**
+     * The "ca571e" string.
+     */
     prefix; string;
+    /**
+     * Version number, not including the leading "v"
+     */
     version: string;
+    /**
+     * The short name of the encoding type, e.g. "bcrypt", "scrypt", etc.
+     */
     crypt_type: string;
+    /**
+     * The argument string. The exact format is determined by the encoding 
+     * type.
+     */
     crypt_args: string;
+    /**
+     * The encoded password.
+     */
     passwd_data: string;
+    /**
+     * The authenticator that matches with the given type.
+     */
     auth: Authenticator;
 
+    /**
+     * @param str The full password string, which will be parsed and its fields stored here
+     */
     constructor(
         str: string
     ) {
@@ -42,11 +74,23 @@ export default class PasswordString
     }
 
 
+    /**
+     * Returns the original string.
+     */
     toString(): string
     {
         return this.orig_str;
     }
 
+    /**
+     * Takes a straight string (without the "ca571e-...") and builds it into 
+     * a PasswordString.
+     *
+     * @param plain_password The raw password
+     * @param encryption_type The encoding type to use, defaults to "plain"
+     * @param encryption_args The encoding args string, defaults to "plain"
+     * @returns A PasswordString object based on the args passed above
+     */
     static buildFromPlain(
         plain_passwd: string
         ,encryption_type = "plain"
