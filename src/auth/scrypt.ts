@@ -196,20 +196,4 @@ export default class ScryptAuth
             ,parallelism: parseInt( parallelism[1] )
         };
     }
-
-    private encodeArgs(
-        args: scryptArgs
-    ): string
-    {
-        const arg_str = [
-            's:' + args.salt_len
-            ,'l:' + args.salt
-            ,'e:' + args.salt_encoding
-            ,'k:' + args.key_len
-            ,'c:' + args.cost
-            ,'b:' + args.block_size
-            ,'p:' + args.parallelism
-        ].join( "," );
-        return arg_str;
-    }
 }
