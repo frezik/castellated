@@ -12,6 +12,25 @@ type argonArgs = {
     ,parallelism: number
     ,argon_type: string
 };
+
+/**
+ * An {@link Authenticator} for argon2. Its lookup name is "argon2", and its 
+ * args string looks like this:
+ * 
+ * `t:3,m:65536,p:2,f:2i`
+ *
+ * This is a set of name:value pairs separted by commas. The params are:
+ *
+ * * **t**: The time cost, which increases the number of iterations
+ * * **m**: The memory cost, in KiB
+ * * **p**: Number of threads (parallelism)
+ * * **f**: Argon2 function type. Valid values are "2i", "2d", and "2id".
+ *
+ * Since we're doing password hasing, the function type will almost always be 
+ * "2i". For more information, see:
+ *
+ * https://github.com/ranisalt/node-argon2/wiki/Options
+ */
 export default class Argon2Auth
 {
     private orig_args_str: string;

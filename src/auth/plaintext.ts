@@ -5,6 +5,11 @@ import Password from '../password_string';
 export const AUTH_NAME = "plain";
 
 
+/**
+ * A plaintext {@link Authenticator}. This is mostly for testing purposes, and 
+ * you should never use this in anything that matters. Its lookup name is 
+ * "plain" and its args string is also "plain".
+ */
 export default class PlaintextAuth
 {
     static register(): void

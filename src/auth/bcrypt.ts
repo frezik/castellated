@@ -6,6 +6,10 @@ import Password from '../password_string';
 export const AUTH_NAME = "bcrypt";
 
 
+/**
+ * An {@link Authenticator} for bcrypt. Its lookup name is "bcrypt", and its 
+ * args string is simply the numeric time cost.
+ */
 export default class BcryptAuth
 {
     private orig_args_str: string;

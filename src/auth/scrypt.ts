@@ -19,6 +19,27 @@ type scryptArgs = {
     ,block_size: number
     ,parallelism: number
 };
+/**
+ * An {@link Authenticator} for scrypt. Its lookup name is "scrypt", and its 
+ * args string looks like this:
+ *
+ * `c:16384,b:8,p:1,s:16,k:64,e:h,l:5476558450e3f2d9818d81b61ed570e1`
+ *
+ * This is a set of name:value pairs separted by commas. The params are:
+ *
+ * * **c**: Cost
+ * * **b**: Block size
+ * * **p**: Parallelization
+ * * **s**: Salt length in bytes
+ * * **k**: Key length
+ * * **e**: Salt encoding. "h" specifies hex
+ * * **l**: The salt itself, encoded according to the "e" parameter
+ *
+ * Having the salt in the args string makes scrypt a bit of an oddball. Most 
+ * other Authenticators handle salt on their own, but implementation details 
+ * required the salt to appear here. Note that the `sameAuth()` method does 
+ * *not* check the salt ("l") parameter for its purposes.
+ */
 export default class ScryptAuth
 {
     private orig_args_str: string;
