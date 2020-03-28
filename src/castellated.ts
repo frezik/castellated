@@ -216,6 +216,9 @@ export default class Castellated
             )
             .then( (is_ok) => {
                 resolve( is_ok );
+            })
+            .catch( (err) => {
+                reject( err );
             });
         });
     }
