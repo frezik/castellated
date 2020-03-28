@@ -1,3 +1,4 @@
+import PasswordString from './password_string';
 /**
  * Authenticators implement an encoding type, e.g. scrypt, bcrypt, etc.
  */
@@ -13,7 +14,7 @@ interface Authenticator
      */
     isMatch(
         incoming_passwd: string
-        ,stored_passwd: Password.PasswordString
+        ,stored_passwd: PasswordString
     ): Promise<boolean>;
 
     /**
@@ -25,7 +26,7 @@ interface Authenticator
      * @returns A boolean indicating if the authentication type is the same or not
      */
     sameAuth(
-        passwd: Password.PasswordString
+        passwd: PasswordString
     ): boolean;
 
     /**
@@ -36,7 +37,7 @@ interface Authenticator
      */
     encode(
         passwd: string
-    ): Promise<Password.PasswordString>;
+    ): Promise<PasswordString>;
 }
 
 export default Authenticator;
