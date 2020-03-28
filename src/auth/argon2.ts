@@ -13,6 +13,21 @@ type argonArgs = {
     ,argon_type: string
 };
 
+const allowed_type_params = [
+    "2i"
+    ,"2d"
+    ,"2id"
+].join( "|" );
+const type_param_regex = new RegExp( [
+    "f:"
+    ,"\s*"
+    ,"("
+    ,allowed_type_params
+    ,")"
+].join( "" ) );
+
+
+
 /**
  * An {@link Authenticator} for argon2. Its lookup name is "argon2", and its 
  * args string looks like this:
@@ -116,7 +131,7 @@ export default class Argon2Auth
         const time_cost = arg_str.match( /t:\s*(\d+)/ );
         const memory_cost = arg_str.match( /m:\s*(\d+)/ );
         const parallelism = arg_str.match( /p:\s*(\d+)/ );
-        const argon_type = arg_str.match( /f:\s*(\w+)/ );
+        const argon_type = arg_str.match( type_param_regex );
 
         if(! time_cost ) throw `Could not parse 't' param in argon2 string: ${arg_str}`;
         if(! memory_cost ) throw `Could not parse 'm' param in argon2 string: ${arg_str}`;
@@ -143,21 +158,5 @@ export default class Argon2Auth
             ,'f:' + args.argon_type
         ].join( "," );
         return arg_str;
-    }
-
-    private argonTypeStringToID(
-        type_str: string
-    ): number
-    {
-        const type_id = 
-            ("2i" == type_str) ? Argon2.argon2i :
-            ("2d" == type_str) ? Argon2.argon2d :
-            ("2id" == type_str) ? Argon2.argon2id :
-            null;
-        if(! type_id) {
-            throw "Unknown argon2 hash function ID: " + this.argon_type;
-        }
-
-        return type_id;
     }
 }
