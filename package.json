@@ -25,7 +25,8 @@
   "dependencies": {
     "argon2": "^0.26.1",
     "bcrypt": "^4.0.1",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.5",
+    "typescript": "^3.8.3"
   },
   "devDependencies": {
     "@types/node": "^13.5.0",
