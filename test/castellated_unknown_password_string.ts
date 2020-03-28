@@ -1,7 +1,11 @@
 import Castle from '../index';
 import * as Tap from 'tap';
 
-const GOOD_PASSWD = "ca571e-v1-plain-plain-secretpass";
+Tap.plan( 1 );
+
+const USERNAME = "foo";
+const GOOD_PASSWD = "ca571e-v1-whoknows-whocares-foobar";
+const GOOD_PASSWD_UNENCODED = "foobar";
 
 const fetch_callback = (
     username: string
@@ -29,17 +33,19 @@ const add_user_callback = (
 };
 
 
-let is_fail = false;
-try {
-    const castle = new Castle(
-        "whoknows"
-        ,"whocares"
-        ,fetch_callback
-        ,update_callback
-        ,add_user_callback
-    );
-}
-catch( err ) {
-    is_fail = true;
-}
-Tap.ok( is_fail, "Failed to look up bad authenticator" );
+const castle = new Castle(
+    "bcrypt"
+    ,"10"
+    ,fetch_callback
+    ,update_callback
+    ,add_user_callback
+);
+
+castle
+    .match( USERNAME, GOOD_PASSWD_UNENCODED )
+    .then( (is_matched) => {
+        Tap.fail( "Was supposed to fail with bad authenticator" );
+    })
+    .catch( (err) => {
+        Tap.pass( "Failed with bad authenticator" );
+    });

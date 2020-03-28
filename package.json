@@ -4,7 +4,7 @@
   "description": "An adaptable, robust password storage system",
   "main": "index.ts",
   "scripts": {
-    "test": "tap --ts test/**/*.ts",
+    "test": "tap --ts --100 test/**/*.ts",
     "prepack": "rm -rf dist && tsc && npx typedoc --out dist/doc src"
   },
   "repository": {
