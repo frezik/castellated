@@ -1,11 +1,12 @@
 {
   "name": "castellated",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An adaptable, robust password storage system",
   "main": "index.ts",
   "scripts": {
     "test": "tap --ts --100 test/**/*.ts",
-    "prepack": "rm -rf dist && tsc && npx typedoc --out dist/doc src"
+    "build": "tsc --outDir dist/ index.ts",
+    "prepack": "rm -rf dist && tsc --outDir dist/ && npx typedoc --out dist/doc src"
   },
   "repository": {
     "type": "git",
