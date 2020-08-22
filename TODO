@@ -1,0 +1,2 @@
+* Do some touchup on the wording of the documentation
+* Run argon2 and scrypt in worker thread (bcrypt2 already does it)
